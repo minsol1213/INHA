@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>K-뷰티·미용 의료기기 M&amp;A 대시보드</title>
+<style>
+:root{
+  color-scheme:light;
+  --page:#f9f9f7; --surface:#fcfcfb; --ink:#0b0b0b; --ink2:#52514e; --muted:#898781;
+  --grid:#e1e0d9; --axis:#c3c2b7; --border:rgba(11,11,11,.10);
+  --s1:#2a78d6; --s2:#eb6834; --o1:#86b6ef; --o2:#2a78d6;
+  --neutral:#c3c2b7; --neutral-ink:#0b0b0b; --mline:#b5b3ab;
+  --tint:#eef4fc; --warn-bg:#fdf3e7; --warn-ink:#7a4a0c; --good:#006300;
+}
+@media (prefers-color-scheme: dark){
+  :root:where(:not([data-theme="light"])){
+    color-scheme:dark;
+    --page:#0d0d0d; --surface:#1a1a19; --ink:#f0efec; --ink2:#c3c2b7; --muted:#898781;
+    --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,.10);
+    --s1:#3987e5; --s2:#d95926; --o1:#184f95; --o2:#3987e5;
+    --neutral:#5a5955; --neutral-ink:#f0efec; --mline:#6b6a66;
+    --tint:#16233a; --warn-bg:#2e2416; --warn-ink:#f2c98a; --good:#0ca30c;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --page:#0d0d0d; --surface:#1a1a19; --ink:#f0efec; --ink2:#c3c2b7; --muted:#898781;
+  --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,.10);
+  --s1:#3987e5; --s2:#d95926; --o1:#184f95; --o2:#3987e5;
+  --neutral:#5a5955; --neutral-ink:#f0efec; --mline:#6b6a66;
+  --tint:#16233a; --warn-bg:#2e2416; --warn-ink:#f2c98a; --good:#0ca30c;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1240px;margin:0 auto;padding:28px 24px 64px}
+header.top{display:flex;justify-content:space-between;gap:24px;align-items:flex-start;flex-wrap:wrap}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;margin:0 0 6px}
+h1{font-size:30px;line-height:1.25;margin:0 0 8px;font-weight:700;letter-spacing:-.01em}
+.sub{color:var(--ink2);margin:0;max-width:760px}
+.btn{font:inherit;font-size:13px;border:1px solid var(--border);background:var(--surface);color:var(--ink);border-radius:8px;padding:7px 12px;cursor:pointer}
+.btn:hover{background:var(--tint)}
+details.fix{margin-top:12px;background:var(--warn-bg);color:var(--warn-ink);border-radius:10px;padding:10px 14px;max-width:880px}
+details.fix summary{cursor:pointer;font-weight:600;font-size:14px}
+details.fix ul{margin:8px 0 2px;padding-left:20px;font-size:14px}
+nav.tabs{position:sticky;top:0;z-index:5;background:var(--page);display:flex;gap:6px;padding:14px 0 12px;margin-top:18px;border-bottom:1px solid var(--grid);overflow-x:auto}
+nav.tabs a{color:var(--ink2);text-decoration:none;font-size:14px;font-weight:600;padding:6px 12px;border-radius:999px;white-space:nowrap}
+nav.tabs a:hover{background:var(--tint);color:var(--ink)}
+section{scroll-margin-top:70px;margin-top:36px}
+section > h2{font-size:20px;margin:0 0 4px;letter-spacing:-.01em}
+section > p.lede{color:var(--ink2);margin:0 0 16px;font-size:14px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:22px}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 18px}
+.kpi .label{font-size:13px;color:var(--ink2);margin:0}
+.kpi .value{font-size:34px;font-weight:700;letter-spacing:-.02em;margin:4px 0 2px;line-height:1.15}
+.kpi .value small{font-size:16px;font-weight:600;margin-left:3px;color:var(--ink2)}
+.kpi .foot{font-size:12.5px;color:var(--muted);margin:0}
+.kpi .foot b{color:var(--good);font-weight:600}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px;grid-column:span 6;min-width:0}
+.card.w12{grid-column:span 12}.card.w8{grid-column:span 8}.card.w4{grid-column:span 4}.card.w7{grid-column:span 7}.card.w5{grid-column:span 5}
+@media (max-width:900px){.card,.card.w8,.card.w4,.card.w7,.card.w5{grid-column:span 12}}
+.card h3{font-size:15.5px;margin:0 0 2px}
+.card .desc{font-size:13px;color:var(--ink2);margin:0 0 10px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--ink2);margin:0 0 6px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:10px;height:10px;border-radius:3px;display:inline-block}
+.swl{width:16px;height:3px;border-radius:2px;display:inline-block}
+svg.chart{width:100%;height:auto;display:block;overflow:visible}
+svg .grid{stroke:var(--grid);stroke-width:1}
+svg .axis{stroke:var(--axis);stroke-width:1}
+svg .tick{fill:var(--muted);font-size:12px;font-variant-numeric:tabular-nums}
+svg .dlabel{fill:var(--ink2);font-size:12.5px}
+svg .dlabel.strong{fill:var(--ink);font-weight:700}
+svg .rowlabel{fill:var(--ink);font-size:13px;font-weight:600}
+svg .rowsub{fill:var(--muted);font-size:11.5px}
+svg .cross{stroke:var(--axis);stroke-width:1}
+svg [tabindex]:focus{outline:none}
+svg [tabindex]:focus-visible{outline:2px solid var(--s1)}
+.note{font-size:12.5px;color:var(--muted);margin:8px 0 0}
+.badge{display:inline-block;font-size:11px;font-weight:600;padding:1px 7px;border-radius:999px;background:var(--tint);color:var(--ink2);vertical-align:2px;margin-left:4px}
+.badge.est{background:var(--warn-bg);color:var(--warn-ink)}
+details.tv{margin-top:10px}
+details.tv summary{font-size:12.5px;color:var(--ink2);cursor:pointer}
+table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--grid);vertical-align:top}
+th{color:var(--ink2);font-weight:600;font-size:12.5px}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+.vs{display:flex;flex-direction:column;gap:12px;margin-top:6px}
+.vs .row{display:grid;grid-template-columns:52px 1fr 76px;align-items:center;gap:10px;font-size:13.5px}
+.vs .bar{height:22px;border-radius:0 4px 4px 0}
+.vs .val{font-weight:700;text-align:right}
+.growth{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:8px}
+.gtile{border:1px solid var(--border);border-radius:10px;padding:12px 14px}
+.gtile .g{font-size:26px;font-weight:700;letter-spacing:-.02em;margin:2px 0}
+.gtile p{margin:0;font-size:12.5px;color:var(--ink2)}
+.seg{display:flex;gap:2px;height:44px;margin:8px 0 10px}
+.seg div{display:flex;align-items:center;padding-left:12px;font-size:13px;font-weight:700;color:#fff;border-radius:0}
+.seg div:first-child{border-radius:6px 0 0 6px}.seg div:last-child{border-radius:0 6px 6px 0}
+.hits{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:8px}
+.hits li{display:grid;grid-template-columns:70px 1fr;gap:10px;font-size:13.5px;padding:8px 0;border-top:1px solid var(--grid)}
+.hits b{font-size:12px;color:var(--ink2);font-weight:600}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pane{border-radius:10px;padding:14px 16px;border:1px solid var(--border)}
+.pane.up{background:var(--tint)}
+.pane h4{margin:0 0 6px;font-size:14px}
+.pane ul{margin:0;padding-left:18px;font-size:13.5px;color:var(--ink2)}
+.pane ul li{margin:3px 0}
+.flow{display:flex;align-items:center;gap:14px;margin-top:8px}
+.flow .big{font-size:30px;font-weight:700;letter-spacing:-.02em}
+.flow .arrow{font-size:22px;color:var(--muted)}
+.timeline{display:grid;grid-template-columns:repeat(3,1fr);gap:0;position:relative;margin-top:14px}
+.timeline::before{content:"";position:absolute;left:16px;right:16px;top:15px;height:2px;background:var(--grid)}
+.step{position:relative;padding:0 14px 0 0}
+.dot{width:32px;height:32px;border-radius:50%;background:var(--surface);border:2px solid var(--s1);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--s1);position:relative}
+.step.last .dot{background:var(--s1);color:#fff}
+.step .when{font-size:12px;color:var(--muted);margin:10px 0 0}
+.step h4{margin:2px 0 2px;font-size:14.5px}
+.step .amt{font-size:20px;font-weight:700;letter-spacing:-.01em;margin:2px 0}
+.step p{margin:0;font-size:13px;color:var(--ink2)}
+@media (max-width:700px){.timeline{grid-template-columns:1fr;gap:18px}.timeline::before{display:none}.two{grid-template-columns:1fr}}
+.insights{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
+.insights .pane p{margin:0;font-size:13px;color:var(--ink2)}
+.risks{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+.risk{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 18px}
+.risk .ic{width:34px;height:34px;border-radius:9px;background:var(--tint);display:flex;align-items:center;justify-content:center;margin-bottom:8px}
+.risk .ic svg{width:18px;height:18px;stroke:var(--s1);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.risk h4{margin:0 0 4px;font-size:14.5px}
+.risk p{margin:0;font-size:13px;color:var(--ink2)}
+.risk .new{font-size:11px;font-weight:700;color:var(--warn-ink);background:var(--warn-bg);padding:1px 7px;border-radius:999px;margin-left:6px}
+.conclusion{margin-top:16px;background:var(--ink);color:var(--surface);border-radius:12px;padding:22px 24px}
+.conclusion p{margin:0;font-size:16px;line-height:1.6}
+.conclusion b{color:var(--surface)}
+.sources{font-size:13px;color:var(--ink2)}
+.sources a{color:var(--s1)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media (max-width:800px){.cols{grid-template-columns:1fr}}
+.tip{position:fixed;z-index:50;pointer-events:none;background:var(--surface);color:var(--ink);border:1px solid var(--border);box-shadow:0 6px 20px rgba(0,0,0,.12);border-radius:8px;padding:8px 10px;font-size:12.5px;min-width:120px;max-width:280px}
+.tip b{display:block;margin-bottom:4px;font-size:12.5px}
+.tip div{display:flex;align-items:center;gap:6px;justify-content:space-between}
+.tip div i{width:8px;height:8px;border-radius:2px;display:inline-block;margin-right:4px}
+.tip div span{font-weight:700;font-variant-numeric:tabular-nums;margin-left:12px}
+.tip .tn{color:var(--muted);font-size:11.5px;margin-top:4px;display:block}
+</style>
+</head>
+<body>
+<div class="tip" id="tip" hidden></div>
+<div class="wrap">
+
+<header class="top">
+  <div>
+    <p class="eyebrow">PE 투자 검토 대시보드 · 2026년 11월 기준</p>
+    <h1>뷰티테크·미용 의료기기 산업과 K-뷰티 M&amp;A</h1>
+    <p class="sub">보고서 「뷰티테크 및 미용 의료기기 산업 확장성과 K-뷰티 M&amp;A 사례 분석」을 시각화했습니다. 공개 자료로 확인한 결과 원문과 다른 수치는 정정한 값으로 반영했습니다.</p>
+    <details class="fix">
+      <summary>원문 대비 정정한 항목 5건</summary>
+      <ul>
+        <li>2025년 수출 순위: 원문 3위 → <b>세계 2위</b> (미국 108억 달러 추월)</li>
+        <li>코스알엑스 실적: 원문의 'EBITDA' 열(1,233·2,044억)은 실제 <b>매출</b>. FY25 매출은 1,175억이 아니라 <b>약 4,500억 원</b></li>
+        <li>코스알엑스 결론: '다운사이드 완벽 방어'가 아니라 <b>가치 상한(Cap)으로 진입가를 묶은 효과</b>. 잔금 1,471억 원은 2030년으로 이연</li>
+        <li>미용 의료기기 영업이익률: 20~30%가 아니라 <b>40~60%</b>(클래시스·비올). 비올은 2025년 상장폐지</li>
+        <li>관세: '재집권 시 우려'가 아니라 2025년 8월부터 <b>상호관세 15%·소액면세 폐지 시행</b></li>
+      </ul>
+    </details>
+  </div>
+  <button class="btn" id="themeBtn" type="button">다크 모드</button>
+</header>
+
+<div class="kpis">
+  <div class="kpi"><p class="label">2025년 화장품 수출</p><p class="value">114<small>억 달러</small></p><p class="foot"><b>세계 2위</b> · YoY +11.8~12.3%</p></div>
+  <div class="kpi"><p class="label">화장품 무역수지 흑자</p><p class="value">101<small>억 달러</small></p><p class="foot">2025년, 처음으로 100억 달러 돌파</p></div>
+  <div class="kpi"><p class="label">대미 화장품 수출</p><p class="value">21.8<small>억 달러</small></p><p class="foot">2025년, 중국(약 20억 달러) 첫 추월</p></div>
+  <div class="kpi"><p class="label">코스알엑스 누적 투자</p><p class="value">9,351<small>억 원</small></p><p class="foot">아모레퍼시픽 지분 93.2%</p></div>
+  <div class="kpi"><p class="label">전문 미용 의료기기 영업이익률</p><p class="value">40~60<small>%</small></p><p class="foot">클래시스 2025년 50%+, 비올 1Q25 약 60%</p></div>
+</div>
+
+<nav class="tabs" aria-label="섹션">
+  <a href="#market">글로벌 시장</a><a href="#value-chain">밸류체인</a><a href="#distribution">유통</a><a href="#deals">M&amp;A 사례</a><a href="#risk">리스크·결론</a>
+</nav>
+
+<!-- 1. 시장 -->
+<section id="market">
+  <h2>1. 글로벌 시장: 한국은 세계 2위 화장품 수출국</h2>
+  <p class="lede">중국 편중에서 벗어나 북미·유럽·중남미로 수출 거점이 다변화되고 있습니다.</p>
+  <div class="grid">
+    <div class="card w8">
+      <h3>국가별 화장품 수출액 (억 달러)</h3>
+      <p class="desc">한국은 2024년 독일, 2025년 미국을 제치고 프랑스에 이어 2위로 올라섰습니다.</p>
+      <div class="legend"><span><i class="swl" style="background:var(--s1)"></i>한국</span><span><i class="swl" style="background:var(--mline)"></i>비교 국가(프랑스·미국·독일)</span></div>
+      <div id="c-exports"></div>
+      <p class="note">2025년은 식품의약품안전처 기준. 프랑스 2025년은 234억/243억 달러로 보도가 엇갈림. 독일 2025년 수치 없음.</p>
+      <details class="tv"><summary>표로 보기</summary>
+        <table><tr><th>국가</th><th class="n">2022</th><th class="n">2023</th><th class="n">2024</th><th class="n">2025</th></tr>
+        <tr><td>프랑스</td><td class="n">194</td><td class="n">219</td><td class="n">233</td><td class="n">234</td></tr>
+        <tr><td>한국</td><td class="n">80</td><td class="n">85</td><td class="n">102</td><td class="n">114</td></tr>
+        <tr><td>미국</td><td class="n">104</td><td class="n">111</td><td class="n">112</td><td class="n">108</td></tr>
+        <tr><td>독일</td><td class="n">87</td><td class="n">98</td><td class="n">91</td><td class="n">n/a</td></tr></table>
+      </details>
+    </div>
+    <div class="card w4">
+      <h3>최대 수출 대상국 교체 (2025년)</h3>
+      <p class="desc">대미 수출이 처음으로 대중 수출을 앞질렀습니다.</p>
+      <div class="vs">
+        <div class="row"><span>미국</span><div class="bar" style="width:100%;background:var(--s1)"></div><span class="val">21.8억$</span></div>
+        <div class="row"><span>중국</span><div class="bar" style="width:91.7%;background:var(--mline)"></div><span class="val">약 20억$</span></div>
+      </div>
+      <p class="note" style="margin-top:14px">2025년 8월부터 한국산 화장품에 상호관세 15%, 800달러 이하 소액 소포 면세 폐지. 미국 내 현지 재고 보유 여부가 수익성을 가릅니다.</p>
+    </div>
+    <div class="card w7">
+      <h3>지역별 성장 지표</h3>
+      <p class="desc">유럽·중남미가 다음 성장축으로 부상하고 있습니다. 주황 배지는 원 자료의 전망·추정치입니다.</p>
+      <div class="growth">
+        <div class="gtile"><p>유럽 · 2026년 1분기 YoY<span class="badge est">원 자료</span></p><div class="g">+55%</div><p>영국·폴란드·네덜란드 거점</p></div>
+        <div class="gtile"><p>폴란드 · 2025년 YoY</p><div class="g">+115%</div><p>실리콘투 물류 거점</p></div>
+        <div class="gtile"><p>중남미 · 2025년 YoY<span class="badge est">원 자료</span></p><div class="g">+100%</div><p>브라질 351억·멕시코 183억 달러 시장(2026E)</p></div>
+        <div class="gtile"><p>미국 · 2026E YoY<span class="badge est">전망</span></p><div class="g">+40%</div><p>2025년 재고 조정 후 회복</p></div>
+        <div class="gtile"><p>유럽 · 2026E YoY<span class="badge est">전망</span></p><div class="g">+30%</div><p>고성장 지속</p></div>
+      </div>
+    </div>
+    <div class="card w5">
+      <h3>미국 내 K-뷰티 침투율 (%)<span class="badge est">원 자료 전망</span></h3>
+      <p class="desc">아마존에서 먼저 검증한 뒤 얼타·코스트코·세포라 오프라인으로 확장합니다.</p>
+      <div class="legend"><span><i class="swl" style="background:var(--s1)"></i>미국 화장품 시장 전체</span><span><i class="swl" style="background:var(--s2)"></i>아마존 채널</span></div>
+      <div id="c-pen"></div>
+      <details class="tv"><summary>표로 보기</summary>
+        <table><tr><th>구분</th><th class="n">2021</th><th class="n">2026E</th></tr>
+        <tr><td>미국 시장 전체</td><td class="n">1.5%</td><td class="n">3.4%</td></tr>
+        <tr><td>아마존 채널</td><td class="n">0.8%</td><td class="n">4.5%</td></tr></table>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- 2. 밸류체인 -->
+<section id="value-chain">
+  <h2>2. 밸류체인: 기초 → 색조·헤어 → 디바이스·의료기기</h2>
+  <p class="lede">카테고리 확장이 마진을 끌어올리고, 기술 기반 사업일수록 높은 수익성과 멀티플을 받습니다.</p>
+  <div class="grid">
+    <div class="card w5">
+      <h3>2025년 화장품 수출 품목 비중</h3>
+      <p class="desc">기초와 색조가 전체의 87.9%를 차지합니다.</p>
+      <div class="seg" role="img" aria-label="기초 74.7%, 색조 13.2%, 기타 12.1%">
+        <div style="width:74.7%;background:var(--s1)">기초 74.7%</div>
+        <div style="width:13.2%;background:var(--s2)"></div>
+        <div style="width:12.1%;background:var(--neutral)"></div>
+      </div>
+      <div class="legend"><span><i class="sw" style="background:var(--s1)"></i>기초 74.7%</span><span><i class="sw" style="background:var(--s2)"></i>색조 13.2%</span><span><i class="sw" style="background:var(--neutral)"></i>기타 12.1%</span></div>
+      <ul class="hits">
+        <li><b>색조</b><span>티르티르 레드 쿠션 33개 쉐이드, 미국 매출 1,000억 원+ · 롬앤 틱톡샵 월 10억 원</span></li>
+        <li><b>헤어</b><span>LG생활건강 닥터그루트 2025년 미국 매출 300억 원 · 미장센 아마존 카테고리 1위</span></li>
+        <li><b>마스크팩</b><span>하이드로겔 주도, 2026년 수출 YoY +70% (원 자료 전망)</span></li>
+        <li><b>ODM</b><span>메가코스·엔에프씨·선진뷰티사이언스 등 생산 이원화 수혜</span></li>
+      </ul>
+    </div>
+    <div class="card w7">
+      <h3>사업 영역별 영업이익률 범위 (%)</h3>
+      <p class="desc">전문 미용 의료기기는 장비와 소모품 반복 매출 구조로 수익성이 가장 높습니다.</p>
+      <div id="c-opm"></div>
+      <table>
+        <tr><th>구분</th><th>대표 기업</th><th>참고 멀티플</th><th>핵심 리스크</th></tr>
+        <tr><td>전통 화장품 ODM·인디</td><td>코스맥스, 인디 브랜드</td><td>EV/EBITDA 8~12x<span class="badge est">원 자료</span></td><td>유행 주기, 채널 협상력</td></tr>
+        <tr><td>홈뷰티 디바이스</td><td>에이피알, 메이크온</td><td>근거 보강 필요</td><td>마케팅비, 트렌드 변동</td></tr>
+        <tr><td>전문 미용 의료기기</td><td>클래시스·제이시스·비올·루트로닉</td><td>글로벌 피어 15~18x</td><td>인허가, 출구 멀티플</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- 3. 유통 -->
+<section id="distribution">
+  <h2>3. 유통: 무역 벤더는 해외 확장의 열쇠이자 양날의 검</h2>
+  <p class="lede">미국 오프라인 소비 비중 80%, 일본 90%. 오프라인 입점과 직매입 벤더의 역할이 커지고 있습니다.</p>
+  <div class="grid">
+    <div class="card w7">
+      <h3>주요 무역 벤더 매출 (억 원)<span class="badge est">원 자료</span></h3>
+      <p class="desc">2025E 막대 끝에 전년 대비 증가율을 표시했습니다.</p>
+      <div class="legend"><span><i class="sw" style="background:var(--o1)"></i>2024년</span><span><i class="sw" style="background:var(--o2)"></i>2025E</span></div>
+      <div id="c-vendor"></div>
+      <details class="tv"><summary>표로 보기 · 계획</summary>
+        <table><tr><th>벤더</th><th class="n">2024</th><th class="n">2025E</th><th>계획</th></tr>
+        <tr><td>실리콘투</td><td class="n">6,915</td><td class="n">11,163</td><td>중동·멕시코 법인, 매장 ‘모이다’</td></tr>
+        <tr><td>예스아시아홀딩스</td><td class="n">5,092</td><td class="n">7,250</td><td>한국·홍콩 대형 창고</td></tr>
+        <tr><td>그레이스</td><td class="n">1,337</td><td class="n">1,945</td><td>일본·미국 지사, IPO 준비</td></tr>
+        <tr><td>아시아비앤씨</td><td class="n">1,163</td><td class="n">1,450</td><td>IPO 또는 경영권 매각 검토</td></tr>
+        <tr><td>이공이공</td><td class="n">469</td><td class="n">860</td><td>일본·유럽 확장, IPO 준비</td></tr></table>
+      </details>
+    </div>
+    <div class="card w5">
+      <h3>직매입 벤더의 득과 실</h3>
+      <div class="two" style="margin-top:8px">
+        <div class="pane up"><h4>장점</h4><ul><li>운전자본 부담 이전</li><li>재고·클레임 리스크 이전</li><li>통관·물류 거점 활용</li></ul></div>
+        <div class="pane"><h4>리스크</h4><ul><li>가격 결정권 상실</li><li>무단 할인으로 브랜드 훼손</li><li>MAP 조항·채널 통제권 실사 필요</li></ul></div>
+      </div>
+      <h3 style="margin-top:18px">국내 채널 다변화: 외국인 약국 지출</h3>
+      <p class="desc">다이소·이마트·약국이 올리브영 의존도를 낮추고 있습니다.</p>
+      <div class="flow"><span class="big" style="color:var(--ink2)">584억</span><span class="arrow">→</span><span class="big">1,414억 원</span><span class="badge">+142%</span></div>
+      <p class="note">2024년 → 2025년 (원 자료)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 4. M&A -->
+<section id="deals">
+  <h2>4. M&amp;A 사례: SI는 콜옵션으로, PE는 상장폐지 후 중간 회수로</h2>
+  <p class="lede">화장품 SI 딜(아모레퍼시픽 × 코스알엑스)과 미용 의료기기 PE 딜 4건을 비교합니다.</p>
+  <div class="grid">
+    <div class="card w12">
+      <h3>코스알엑스 단계적 인수 구조</h3>
+      <p class="desc">세 단계에 걸쳐 9,351억 원에 지분 93.2%를 확보했습니다.</p>
+      <div class="timeline">
+        <div class="step"><div class="dot">1</div><p class="when">2021년 9월</p><h4>소수지분 인수</h4><p class="amt">1,800억 원 · 38.4%</p><p>창업자 독자 경영 유지. 콜옵션·공동매도권·동반매각요구권 확보</p></div>
+        <div class="step"><div class="dot">2</div><p class="when">2023년 10월</p><h4>콜옵션 행사</h4><p class="amt">7,551억 원 · 28.8만 주</p><p>가치 상한(Cap)으로 시장가치보다 낮은 가격에 잔여 지분 확보. 1차 6,080억 원 2024년 4월 지급</p></div>
+        <div class="step last"><div class="dot">3</div><p class="when">2025년 4월 변경</p><h4>잔금 이연</h4><p class="amt">1,471억 원 → 2030년</p><p>창업자가 지분을 더 보유하며 책임경영. 사실상 Retention 장치</p></div>
+      </div>
+      <p class="note">Phase 2 지분율은 54.8%/57.6%로 보도가 엇갈려 공시 원문 확인 필요. 총 취득원가는 집계 방식에 따라 9,163억~9,351억 원.</p>
+    </div>
+    <div class="card w6">
+      <h3>코스알엑스 100% 환산 기업가치 (조 원)</h3>
+      <p class="desc">Cap 덕분에 시장 평가보다 낮은 가격에 잔여 지분을 샀습니다.</p>
+      <div id="c-val"></div>
+      <details class="tv"><summary>표로 보기</summary>
+        <table><tr><th>기준</th><th class="n">100% 환산</th></tr>
+        <tr><td>Phase 1 (2021)</td><td class="n">약 0.47조 (4,688억)</td></tr>
+        <tr><td>Phase 2 행사가 (2023)</td><td class="n">약 1.31~1.38조</td></tr>
+        <tr><td>당시 시장 평가</td><td class="n">2~3조</td></tr></table>
+      </details>
+    </div>
+    <div class="card w6">
+      <h3>코스알엑스 분기 매출 (억 원)</h3>
+      <p class="desc">행사 직후 꺾였다가 2025년 4분기에 편입 후 최대치로 회복했습니다.</p>
+      <div id="c-q"></div>
+      <p class="note">연간: FY21 1,233억 → FY22 2,044억 → 1H23 1,902억(영업이익 717억) → FY25 약 4,500억(영업이익률 25.9%). 4Q25 영업이익 381억 원.</p>
+    </div>
+    <div class="card w12">
+      <div class="two">
+        <div class="pane"><h4>막지 못한 것</h4><ul><li>투자금 대부분(7,551억 원)을 2023년 10월, 실적 정점 부근에 집행</li><li>콜옵션은 매수자의 선택권이라 행사 시점의 고점 리스크는 매수자 부담</li><li>4Q24~3Q25 분기 매출 1,000억 원 안팎으로 하락</li></ul></div>
+        <div class="pane up"><h4>실제로 만든 가치</h4><ul><li>가치 상한(Cap): 시장가 2~3조 원 대비 1.3~1.4조 원에 확보</li><li>정보 비대칭 해소: 2년간 소수주주로 검증</li><li>창업자 Retention: 잔금 이연으로 회복 기간 동기 유지</li></ul></div>
+      </div>
+      <p class="note" style="color:var(--ink2)"><b>교훈:</b> Cap에 더해 행사 직전 실적 연동 가격 조정(Floor 포함)과 잔금의 실적 조건부 이연(Earn-out)을 처음부터 설계해야 합니다.</p>
+    </div>
+    <div class="card w7">
+      <h3>미용 의료기기 PE 인수 규모 (억 원)</h3>
+      <p class="desc">국내 주요 미용 의료기기 기업은 모두 PE에 인수됐습니다.</p>
+      <div id="c-deals"></div>
+      <details class="tv" open><summary>거래 구조·회수</summary>
+        <table><tr><th>대상</th><th>구조</th><th>회수·특징</th></tr>
+        <tr><td>클래시스</td><td>지분 60.84% 인수, 상장 유지</td><td>리캡·블록딜·배당으로 약 8,500억 원 회수(원금 초과)</td></tr>
+        <tr><td>루트로닉</td><td>지분 19.33% + 공개매수 → 상장폐지</td><td>유상감자 2회로 약 3,800억 원 중간 회수</td></tr>
+        <tr><td>제이시스메디칼</td><td>지분 26.44% + 공개매수 → 상장폐지</td><td>프랑스 헬스케어 PE, 한국 법인 설립</td></tr>
+        <tr><td>비올</td><td>지분 34.76% + 공개매수 → 상장폐지</td><td>대주주 재투자, LG화학 에스테틱 사업부 인수</td></tr></table>
+      </details>
+    </div>
+    <div class="card w5">
+      <h3>밸류에이션 기준점 (EV/EBITDA, 배)</h3>
+      <p class="desc">출구 멀티플이 피어 범위를 넘으면 매각이 지연됩니다.</p>
+      <div id="c-mult"></div>
+      <p class="note">클래시스 희망가 3조 원 기준. 2024년 EBITDA 1,300억 원 적용 시 약 23배.</p>
+    </div>
+    <div class="card w12">
+      <h3>PE 딜에서 읽히는 구조적 시사점</h3>
+      <div class="insights" style="margin-top:8px">
+        <div class="pane"><h4>상장폐지 = 중간 회수 수단 확대</h4><p>100% 지분으로 유상감자·고배당 조기 회수 (루트로닉)</p></div>
+        <div class="pane"><h4>매도자 재투자 = 콜옵션과 같은 역할</h4><p>비올 대주주가 현금 511억 + 현물출자 2,027억 원으로 SPC 46.09% 보유</p></div>
+        <div class="pane"><h4>다음 단계는 볼트온</h4><p>베인 이루다, VIG LG화학 에스테틱(약 2,000억 원): 장비+시술제 결합</p></div>
+        <div class="pane"><h4>출구 멀티플이 속도를 정한다</h4><p>클래시스 희망가 약 23배 vs 피어 15~18배 → 가격 격차로 매각 지연</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. 리스크 -->
+<section id="risk">
+  <h2>5. 투자 판단: 4대 리스크와 확약 조건</h2>
+  <p class="lede">투자 전 반드시 검증하고 계약서(SPA·SHA)에 대응 조항을 넣어야 할 항목입니다.</p>
+  <div class="risks">
+    <div class="risk"><div class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h18M3 12h12M3 17h7"/></svg></div><h4>유통 플랫폼 집중</h4><p>올리브영·실리콘투 등 단일 플랫폼 의존 시 가격 결정권 약화, 마케팅비 전가.</p></div>
+    <div class="risk"><div class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></div><h4>통상·세무·회계</h4><p>대미 상호관세 15%·소액면세 폐지. 관세 후 마진, 이전가격, 현지 재고 점검. 2027년 IFRS 18 반영.</p></div>
+    <div class="risk"><div class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4v16"/></svg></div><h4>서구권 색조 진입장벽</h4><p>인종별 쉐이드 개발과 국가별 성분 인증으로 기초·디바이스보다 침투가 어렵습니다.</p></div>
+    <div class="risk"><div class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="14" height="16" rx="2"/><path d="M9 9h6M9 13h6M9 17h3"/></svg></div><h4>의료기기 인허가·사업 모델<span class="new">추가</span></h4><p>식약처·FDA 510(k)·CE-MDR 인허가, 소모품 매출 비중, 대리점 의존도, 모조품.</p></div>
+  </div>
+  <div class="grid" style="margin-top:14px">
+    <div class="card w12">
+      <h3>계약서에 넣어야 할 확약 조건</h3>
+      <table>
+        <tr><th style="width:180px">조건</th><th>내용</th></tr>
+        <tr><td><b>가격 구조</b></td><td>가치 상한(Cap) + 행사 직전 실적 연동 가격 조정(Floor 포함) + 잔금 Earn-out. 경영권 인수 시 매도자 재투자(Rollover)</td></tr>
+        <tr><td><b>채널 집중도 상한</b></td><td>단일 벤더·플랫폼 매출 비중 35~40% 이하, 오프라인 직전개 등 채널 분산 의무</td></tr>
+        <tr><td><b>AX KPI 연동</b></td><td>AI 수요 예측 도입, AI 결합 디바이스 R&amp;D 이행을 경영진 KPI·Vesting에 연동</td></tr>
+        <tr><td><b>인허가 유지</b></td><td>주요 수출국 인허가 유지·갱신 의무, 취소·중대 리콜 시 진술보장 위반 및 손해배상</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="conclusion"><p><b>결론.</b> 채널 다변화를 입증한 브랜드와 인허가 장벽을 갖춘 전문 미용 의료기기에 집중합니다. 진입 가격은 가치 상한과 실적 연동 가격 조정, 또는 매도자 재투자로 분산하고, 출구 멀티플이 글로벌 피어 밴드(15~18배) 안에 들어오도록 보수적으로 잡아야 합니다.</p></div>
+
+  <div class="cols" style="margin-top:28px">
+    <div class="sources">
+      <h3 style="font-size:15px;margin:0 0 6px;color:var(--ink)">추가 확인이 필요한 항목</h3>
+      <ul>
+        <li>코스알엑스 2차 지분율(54.8%/57.6%)과 콜옵션 산식: 2023.10.31 공시 원문</li>
+        <li>프랑스 2025년 화장품 수출액(234억/243억 달러)</li>
+        <li>원 자료 전망치: 대미 +40%, 대유럽 +30%, 침투율, 마스크팩 +70%</li>
+        <li>무역 벤더 매출과 IPO 진행 상황, 섹터 멀티플·목표 IRR 가정의 근거</li>
+        <li>투자 시점 기준 미국 관세율</li>
+      </ul>
+    </div>
+    <div class="sources">
+      <h3 style="font-size:15px;margin:0 0 6px;color:var(--ink)">주요 출처</h3>
+      <ul>
+        <li><a href="https://www.cosinkorea.com/mobile/article.html?no=57518">코스인코리아: ‘세계 2위’ 도약한 K-뷰티 (식약처 통계)</a></li>
+        <li><a href="https://www.koreabizreview.com/articles/kbr-legacy-7790">Korea Business Review: 수출 세계 2위, 114억 달러</a></li>
+        <li><a href="https://v.daum.net/v/20260407150500617">코스알엑스 매출 반등 기대 (2026.4)</a></li>
+        <li><a href="https://dealsite.co.kr/articles/140690">딜사이트: 코스알엑스 2차 인수대금 지급 5년 이연</a></li>
+        <li><a href="https://newstomato.com/ReadNews.aspx?no=1291880">IB토마토: 베인캐피탈, 클래시스로 4조 도전</a></li>
+        <li><a href="https://economist.co.kr/article/view/ecn202306090003">이코노미스트: 한앤컴퍼니, 루트로닉 인수</a></li>
+        <li><a href="https://www.unicornfactory.co.kr/article/2025031709125180913">유니콘팩토리: 아키메드, 제이시스메디칼</a></li>
+        <li><a href="https://dealsite.co.kr/articles/145064">딜사이트: VIG파트너스, 비올 인수</a></li>
+        <li><a href="https://www.theguru.co.kr/news/article.html?no=90368">더구루: K-뷰티, 美 관세 15%</a></li>
+      </ul>
+    </div>
+  </div>
+</section>
+</div>
+
+<script>
+(function(){
+  /* theme */
+  var root=document.documentElement, btn=document.getElementById('themeBtn');
+  function isDark(){var t=root.getAttribute('data-theme'); if(t) return t==='dark'; return window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches;}
+  function sync(){btn.textContent=isDark()?'라이트 모드':'다크 모드';}
+  try{var saved=localStorage.getItem('kb-theme'); if(saved) root.setAttribute('data-theme',saved);}catch(e){}
+  sync();
+  btn.addEventListener('click',function(){var next=isDark()?'light':'dark';root.setAttribute('data-theme',next);try{localStorage.setItem('kb-theme',next);}catch(e){} sync();});
+
+  /* helpers */
+  var NS='http://www.w3.org/2000/svg';
+  function el(tag,attrs,parent){var e=document.createElementNS(NS,tag);for(var k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e;}
+  function txt(parent,x,y,s,attrs){var t=el('text',Object.assign({x:x,y:y},attrs||{}),parent);t.textContent=s;return t;}
+  function mk(id,W,H,label){var s=el('svg',{viewBox:'0 0 '+W+' '+H,role:'img','aria-label':label,'class':'chart'});document.getElementById(id).appendChild(s);return s;}
+  var tip=document.getElementById('tip');
+  function move(e){var p=14,x=e.clientX+p,y=e.clientY+p,r=tip.getBoundingClientRect();if(x+r.width>innerWidth-8)x=e.clientX-r.width-p;if(y+r.height>innerHeight-8)y=e.clientY-r.height-p;tip.style.left=x+'px';tip.style.top=y+'px';}
+  function show(e,h){tip.innerHTML=h;tip.hidden=false;move(e);}
+  function hide(){tip.hidden=true;}
+  function bind(node,fn,onEnter,onLeave){
+    node.setAttribute('tabindex','0');node.style.cursor='default';
+    node.addEventListener('pointerenter',function(e){show(e,fn());if(onEnter)onEnter();});
+    node.addEventListener('pointermove',move);
+    node.addEventListener('pointerleave',function(){hide();if(onLeave)onLeave();});
+    node.addEventListener('focus',function(){var b=node.getBoundingClientRect();show({clientX:b.left+b.width/2,clientY:b.top},fn());if(onEnter)onEnter();});
+    node.addEventListener('blur',function(){hide();if(onLeave)onLeave();});
+  }
+  function fmt(n){return n.toLocaleString('ko-KR');}
+  function row(color,name,val){return '<div><span><i style="background:'+color+'"></i>'+name+'</span><span>'+val+'</span></div>';}
+  function vbarPath(x,y,w,h,r){r=Math.min(r,w/2,h);return 'M'+x+','+(y+h)+'V'+(y+r)+'Q'+x+','+y+' '+(x+r)+','+y+'H'+(x+w-r)+'Q'+(x+w)+','+y+' '+(x+w)+','+(y+r)+'V'+(y+h)+'Z';}
+  function hbarPath(x,y,w,h,r){r=Math.min(r,w,h/2);return 'M'+x+','+y+'H'+(x+w-r)+'Q'+(x+w)+','+y+' '+(x+w)+','+(y+r)+'V'+(y+h-r)+'Q'+(x+w)+','+(y+h)+' '+(x+w-r)+','+(y+h)+'H'+x+'Z';}
+
+  /* line chart */
+  function lineChart(id,c){
+    var W=c.W||640,H=c.h||300,m={t:18,r:c.r||150,b:32,l:44},iw=W-m.l-m.r,ih=H-m.t-m.b,n=c.x.length;
+    var s=mk(id,W,H,c.label);
+    function xs(i){return m.l+i*iw/(n-1);} function ys(v){return m.t+ih-v/c.yMax*ih;}
+    c.ticks.forEach(function(t){el('line',{x1:m.l,x2:m.l+iw,y1:ys(t),y2:ys(t),'class':t===0?'axis':'grid'},s);txt(s,m.l-8,ys(t)+4,t,{'class':'tick','text-anchor':'end'});});
+    c.x.forEach(function(v,i){txt(s,xs(i),H-8,v,{'class':'tick','text-anchor':'middle'});});
+    var ord=c.series.slice().sort(function(a,b){return (a.emph?1:0)-(b.emph?1:0);});
+    ord.forEach(function(se){
+      var d='';se.v.forEach(function(v,i){if(v==null)return;d+=(d?'L':'M')+xs(i)+','+ys(v);});
+      el('path',{d:d,fill:'none',style:'stroke:'+se.color,'stroke-width':se.emph?3:2,'stroke-linejoin':'round','stroke-linecap':'round'},s);
+      se.v.forEach(function(v,i){if(v==null)return;el('circle',{cx:xs(i),cy:ys(v),r:se.emph?5:4,style:'fill:'+se.color+';stroke:var(--surface)','stroke-width':2},s);});
+      var li=se.v.length-1;while(se.v[li]==null)li--;
+      txt(s,xs(li)+12,ys(se.v[li])+4+(se.dy||0),se.name+' '+se.v[li]+(se.endNote||''),{'class':se.emph?'dlabel strong':'dlabel'});
+    });
+    var ch=el('line',{'class':'cross',y1:m.t,y2:m.t+ih,x1:0,x2:0,visibility:'hidden'},s);
+    s.insertBefore(ch,s.firstChild.nextSibling);
+    c.x.forEach(function(xv,i){
+      var w=iw/(n-1),r=el('rect',{x:xs(i)-w/2,y:m.t,width:w,height:ih,fill:'transparent'},s);
+      bind(r,function(){return '<b>'+xv+'</b>'+c.series.map(function(se){return row(se.color,se.name,se.v[i]==null?'n/a':se.v[i]+c.unit);}).join('');},
+        function(){ch.setAttribute('x1',xs(i));ch.setAttribute('x2',xs(i));ch.setAttribute('visibility','visible');},
+        function(){ch.setAttribute('visibility','hidden');});
+    });
+  }
+
+  /* range chart */
+  function rangeChart(id,c){
+    var rh=c.rowH||54,m={t:8,r:c.r||110,b:28,l:c.l||170},W=c.W||640,H=m.t+c.rows.length*rh+m.b,iw=W-m.l-m.r;
+    var s=mk(id,W,H,c.label);
+    function xs(v){return m.l+v/c.max*iw;}
+    c.ticks.forEach(function(t){el('line',{x1:xs(t),x2:xs(t),y1:m.t,y2:H-m.b,'class':t===0?'axis':'grid'},s);txt(s,xs(t),H-8,t+(c.tickUnit||''),{'class':'tick','text-anchor':'middle'});});
+    c.rows.forEach(function(r,i){
+      var cy=m.t+i*rh+rh/2;
+      txt(s,m.l-12,cy-(r.sub?3:-4),r.label,{'class':'rowlabel','text-anchor':'end'});
+      if(r.sub)txt(s,m.l-12,cy+13,r.sub,{'class':'rowsub','text-anchor':'end'});
+      var g=el('g',{},s);
+      if(r.hi!=null&&r.hi!==r.lo){
+        el('rect',{x:xs(r.lo),y:cy-9,width:Math.max(4,xs(r.hi)-xs(r.lo)),height:18,rx:4,style:'fill:'+(r.color||'var(--s1)')},g);
+      }else{
+        el('circle',{cx:xs(r.lo),cy:cy,r:8,style:'fill:'+(r.color||'var(--s1)')+';stroke:var(--surface)','stroke-width':2},g);
+      }
+      var end=r.hi!=null?r.hi:r.lo;
+      txt(s,xs(end)+12,cy+4,r.text,{'class':'dlabel strong'});
+      el('rect',{x:m.l,y:cy-rh/2,width:iw,height:rh,fill:'transparent'},g);
+      bind(g,function(){return '<b>'+r.label+'</b>'+row(r.color||'var(--s1)',c.metric,r.text)+(r.note?'<span class="tn">'+r.note+'</span>':'');});
+    });
+  }
+
+  /* grouped horizontal bars (vendors) */
+  function vendorChart(id,d){
+    var bh=14,gap=2,rh=bh*2+gap+18,m={t:4,r:130,b:28,l:120},W=640,H=m.t+d.length*rh+m.b,iw=W-m.l-m.r,max=12000;
+    var s=mk(id,W,H,'주요 무역 벤더 2024년·2025E 매출 비교');
+    function xs(v){return m.l+v/max*iw;}
+    [0,4000,8000,12000].forEach(function(t){el('line',{x1:xs(t),x2:xs(t),y1:m.t,y2:H-m.b,'class':t===0?'axis':'grid'},s);txt(s,xs(t),H-8,fmt(t),{'class':'tick','text-anchor':'middle'});});
+    d.forEach(function(r,i){
+      var y=m.t+i*rh+8,g=el('g',{},s);
+      txt(s,m.l-12,y+bh+5,r.name,{'class':'rowlabel','text-anchor':'end'});
+      el('path',{d:hbarPath(m.l,y,xs(r.a)-m.l,bh,4),style:'fill:var(--o1)'},g);
+      el('path',{d:hbarPath(m.l,y+bh+gap,xs(r.b)-m.l,bh,4),style:'fill:var(--o2)'},g);
+      var gr=Math.round((r.b/r.a-1)*1000)/10;
+      txt(s,xs(r.b)+8,y+bh*2+gap-2,fmt(r.b)+'  (+'+gr+'%)',{'class':'dlabel strong'});
+      el('rect',{x:m.l,y:y-6,width:iw,height:rh-4,fill:'transparent'},g);
+      bind(g,function(){return '<b>'+r.name+'</b>'+row('var(--o1)','2024년',fmt(r.a)+'억')+row('var(--o2)','2025E',fmt(r.b)+'억')+'<span class="tn">증가율 +'+gr+'%</span>';});
+    });
+  }
+
+  /* vertical bars (quarterly) */
+  function qChart(id,d){
+    var W=640,H=300,m={t:26,r:16,b:34,l:48},iw=W-m.l-m.r,ih=H-m.t-m.b,max=1600,n=d.length,slot=iw/n,bw=Math.min(64,slot-24);
+    var s=mk(id,W,H,'코스알엑스 분기 매출: '+d.map(function(r){return r.q+' '+fmt(r.v)+'억';}).join(', '));
+    function ys(v){return m.t+ih-v/max*ih;}
+    [0,500,1000,1500].forEach(function(t){el('line',{x1:m.l,x2:W-m.r,y1:ys(t),y2:ys(t),'class':t===0?'axis':'grid'},s);txt(s,m.l-8,ys(t)+4,fmt(t),{'class':'tick','text-anchor':'end'});});
+    d.forEach(function(r,i){
+      var cx=m.l+slot*i+slot/2,x=cx-bw/2,g=el('g',{},s);
+      el('path',{d:vbarPath(x,ys(r.v),bw,ys(0)-ys(r.v),4),style:'fill:var(--s1)'},g);
+      txt(s,cx,H-10,r.q,{'class':'tick','text-anchor':'middle'});
+      if(r.label)txt(s,cx,ys(r.v)-8,fmt(r.v)+(r.label===true?'':' '+r.label),{'class':'dlabel strong','text-anchor':'middle'});
+      el('rect',{x:m.l+slot*i,y:m.t,width:slot,height:ih,fill:'transparent'},g);
+      bind(g,function(){return '<b>'+r.q+'</b>'+row('var(--s1)','매출',fmt(r.v)+'억 원')+(r.note?'<span class="tn">'+r.note+'</span>':'');});
+    });
+  }
+
+  /* single-series horizontal bars (deals) */
+  function dealChart(id,d){
+    var bh=22,rh=56,m={t:6,r:150,b:28,l:150},W=640,H=m.t+d.length*rh+m.b,iw=W-m.l-m.r,max=10000;
+    var s=mk(id,W,H,'미용 의료기기 PE 인수 규모: '+d.map(function(r){return r.name+' '+r.text;}).join(', '));
+    function xs(v){return m.l+v/max*iw;}
+    [0,2500,5000,7500,10000].forEach(function(t){el('line',{x1:xs(t),x2:xs(t),y1:m.t,y2:H-m.b,'class':t===0?'axis':'grid'},s);txt(s,xs(t),H-8,fmt(t),{'class':'tick','text-anchor':'middle'});});
+    d.forEach(function(r,i){
+      var cy=m.t+i*rh+rh/2,g=el('g',{},s);
+      txt(s,m.l-12,cy-3,r.name,{'class':'rowlabel','text-anchor':'end'});
+      txt(s,m.l-12,cy+13,r.sub,{'class':'rowsub','text-anchor':'end'});
+      el('path',{d:hbarPath(m.l,cy-bh/2,xs(r.v)-m.l,bh,4),style:'fill:var(--s1)'},g);
+      if(r.hi){el('rect',{x:xs(r.v)+2,y:cy-bh/2,width:xs(r.hi)-xs(r.v)-2,height:bh,rx:4,style:'fill:var(--o1)'},g);}
+      txt(s,xs(r.hi||r.v)+10,cy+5,r.text,{'class':'dlabel strong'});
+      el('rect',{x:m.l,y:cy-rh/2,width:iw,height:rh,fill:'transparent'},g);
+      bind(g,function(){return '<b>'+r.name+'</b>'+row('var(--s1)','인수 규모',r.text)+'<span class="tn">'+r.sub+(r.note?' · '+r.note:'')+'</span>';});
+    });
+  }
+
+  /* render */
+  lineChart('c-exports',{label:'국가별 화장품 수출액 2022~2025: 한국 80→114억 달러로 2025년 세계 2위',x:['2022','2023','2024','2025'],yMax:250,ticks:[0,50,100,150,200,250],unit:'억$',
+    series:[
+      {name:'프랑스',v:[194,219,233,234],color:'var(--mline)'},
+      {name:'미국',v:[104,111,112,108],color:'var(--mline)',dy:12},
+      {name:'독일',v:[87,98,91,null],color:'var(--mline)',dy:20,endNote:' (2025 n/a)'},
+      {name:'한국',v:[80,85,102,114],color:'var(--s1)',emph:true,dy:-8,endNote:' · 2위'}
+    ]});
+  lineChart('c-pen',{label:'미국 K-뷰티 침투율 2021→2026E: 전체 1.5→3.4%, 아마존 0.8→4.5%',x:['2021','2026E'],yMax:5,ticks:[0,1,2,3,4,5],unit:'%',h:280,W:440,r:96,
+    series:[{name:'전체',v:[1.5,3.4],color:'var(--s1)',endNote:'%'},{name:'아마존',v:[0.8,4.5],color:'var(--s2)',endNote:'%'}]});
+  rangeChart('c-opm',{label:'사업 영역별 영업이익률 범위',metric:'영업이익률',max:70,ticks:[0,20,40,60],tickUnit:'%',
+    rows:[
+      {label:'전통 화장품 ODM·인디',sub:'원 자료 가정',lo:8,hi:12,text:'8~12%'},
+      {label:'홈뷰티 디바이스',sub:'원 자료 가정',lo:20,hi:30,text:'20~30%'},
+      {label:'전문 미용 의료기기',sub:'클래시스·비올 실적',lo:40,hi:60,text:'40~60%',note:'클래시스 2025년 50%+, 비올 1Q25 약 60%'}
+    ]});
+  vendorChart('c-vendor',[
+    {name:'실리콘투',a:6915,b:11163},{name:'예스아시아',a:5092,b:7250},{name:'그레이스',a:1337,b:1945},{name:'아시아비앤씨',a:1163,b:1450},{name:'이공이공',a:469,b:860}
+  ]);
+  rangeChart('c-val',{label:'코스알엑스 100% 환산 기업가치',metric:'100% 환산',max:3.2,ticks:[0,1,2,3],tickUnit:'조',l:150,
+    rows:[
+      {label:'Phase 1',sub:'2021년 인수가',lo:0.47,text:'약 0.47조',note:'1,800억 원 ÷ 38.4% ≈ 4,688억 원'},
+      {label:'Phase 2 행사가',sub:'2023년, Cap 적용',lo:1.31,hi:1.38,text:'1.31~1.38조',note:'7,551억 원 ÷ 57.6%/54.8%'},
+      {label:'당시 시장 평가',sub:'2023년 보도',lo:2,hi:3,text:'2~3조',color:'var(--mline)'}
+    ]});
+  qChart('c-q',[
+    {q:'3Q24',v:1506,label:true,note:'자회사 편입 직후'},{q:'4Q24',v:1379},{q:'1Q25',v:1016},
+    {q:'2Q25',v:967,label:'저점'},{q:'3Q25',v:994},{q:'4Q25',v:1523,label:'최대',note:'편입 후 분기 최대, YoY +10.4%, 영업이익 381억 원'}
+  ]);
+  dealChart('c-deals',[
+    {name:'루트로닉',sub:'한앤컴퍼니 · 2023.6',v:9570,hi:10000,text:'약 9,570억~1조',note:'상장폐지'},
+    {name:'제이시스메디칼',sub:'아키메드 · 2024.6',v:7200,text:'약 7,200억',note:'상장폐지'},
+    {name:'클래시스',sub:'베인캐피탈 · 2022.4',v:6699,text:'6,699억',note:'상장 유지'},
+    {name:'비올',sub:'VIG파트너스 · 2025.6',v:5000,text:'5,000억+ (추정)',note:'상장폐지, 업계 추정'}
+  ]);
+  rangeChart('c-mult',{label:'EV/EBITDA 기준점: 피어 15~18배, 클래시스 희망가 약 23배',metric:'EV/EBITDA',max:26,ticks:[0,5,10,15,20,25],tickUnit:'x',l:130,rowH:58,W:440,r:70,
+    rows:[
+      {label:'글로벌 피어 평균',sub:'미용 의료기기',lo:15,hi:18,text:'15~18x',color:'var(--mline)'},
+      {label:'클래시스 희망가',sub:'2024년 EBITDA 기준',lo:23,text:'약 23x',color:'var(--s2)',note:'희망가 3조 원 ÷ EBITDA 1,300억 원'},
+      {label:'클래시스 희망가',sub:'2025년 실적 반영',lo:17,hi:18,text:'17~18x'}
+    ]});
+})();
+</script>
+</body>
+</html>
